@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WorkTrack_Server.Properties
+namespace WorkTrack_Client.Properties
 {
 
 
