@@ -1,0 +1,23 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="MainWindow1" mc:Ignorable="d" x:Class="WorkTrack_Client.MainWindow"
+        Title="MainWindow" Height="162" Width="388" ResizeMode="CanMinimize" Loaded="MainWindow1_Loaded" Closing="MainWindow1_Closing" StateChanged="MainWindow1_StateChanged" Icon="Icon/icon2.ico">
+    <Window.Background>
+        <RadialGradientBrush>
+            <GradientStop Color="#FF878585"/>
+            <GradientStop Color="#FF525252" Offset="1"/>
+            <GradientStop Color="#FF525252" Offset="0.992"/>
+        </RadialGradientBrush>
+    </Window.Background>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF878585" Offset="0"/>
+                <GradientStop Color="#FF525252" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Label x:Name="pctime" Content="Label" HorizontalAlignment="Left" Margin="99,10,0,0" VerticalAlignment="Top" Height="31" Width="192" FontFamily="Tahoma" FontSize="16" Foreground="White"/>
+        <Label x:Name="isconnect" Content="Label" HorizontalAlignment="Left" Margin="99,57,0,0" VerticalAlignment="Top" Height="37" Width="192" FontFamily="Tahoma" FontSize="16"/>
+    </Grid>
+</Window>
