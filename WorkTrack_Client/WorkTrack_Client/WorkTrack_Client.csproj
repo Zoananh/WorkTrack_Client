@@ -73,6 +73,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckRestart.cs" />
     <Compile Include="ConnectionCheck.cs" />
     <Compile Include="FTP.cs" />
     <Compile Include="GetInformation.cs" />

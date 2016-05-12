@@ -46,7 +46,7 @@ namespace WorkTrack_Client
             doit = true;
             CheckprocTimer = new System.Timers.Timer();
             CheckprocTimer.Elapsed += CheckprocTimer_elapsed;
-            CheckprocTimer.Interval = 10000;
+            CheckprocTimer.Interval = 20000;
             CheckprocTimer.Start();
 
             mainwindowTimer = new System.Timers.Timer();

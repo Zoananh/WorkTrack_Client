@@ -1,44 +1,40 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Forms;
 
-namespace WorkTrack_Client
+namespace WorkTrack_conlose
 {
-    class GetInformation
+    class Program
     {
-
-        List<string> ProcessList = new List<string>();
-        List<string> CurrentProcessList = new List<string>();
-        List<string[]> AllProcessList = new List<string[]>();
-        public void CheckProcess(List<string> prlist, bool doit)
+        
+        static void Main(string[] args)
         {
-            if (doit)
-            {
-                ProcessList = prlist;
-            }
-
-            Process[] pr = Process.GetProcesses();
-            //.Where(p => !string.IsNullOrEmpty(p.MainWindowTitle))
-            //.Select(p => new { p.MainWindowTitle }).ToString();
+            bool doit = true;
+            List<string> ProcessList = new List<string>();
+            List<string> ProcessList1 = new List<string>();
+            Process[] pr;
+            List<string> CurrentProcessList = new List<string>();
+            List<string[]> AllProcessList = new List<string[]>();
+            pr = Process.GetProcesses();
 
             foreach (Process poc in pr)
             {
                 if (!string.IsNullOrEmpty(poc.MainWindowTitle))
                 {
-                    CurrentProcessList.Add(poc.MainWindowTitle.ToString());
+                    ProcessList1.Add(poc.MainWindowTitle.ToString());
 
                 }
 
             }
-
+               
+            if (doit)
+            {
+                ProcessList = ProcessList1;
+            }
 
             bool deleteIS = true;
             for (int i = 0; i < ProcessList.Count; i++)
@@ -105,7 +101,7 @@ namespace WorkTrack_Client
 
             }
 
-            swr.Close();
+            swr.Flush();
             ProcessList.Clear();
             foreach (string str in CurrentProcessList)
             {
@@ -113,39 +109,8 @@ namespace WorkTrack_Client
 
             }
             CurrentProcessList.Clear();
-        }
-        public void GetInstalledApps()
-        {
-            StreamWriter SWinf = System.IO.File.CreateText(System.Environment.MachineName + "_InstalledApp.txt");
-            string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-            using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(uninstallKey))
-            {
-                foreach (string skName in rk.GetSubKeyNames())
-                {
-                    using (RegistryKey sk = rk.OpenSubKey(skName))
-                    {
-                        try
-                        {
-                            var displayName = sk.GetValue("DisplayName");
-                            var InstallDate = sk.GetValue("InstallDate").ToString();
-                            var publisher = sk.GetValue("Publisher");
-                            SWinf.Write(displayName.ToString() + "/" + publisher + "/" + InstallDate + System.Environment.NewLine);
-                        }
-                        catch (Exception ex)
-                        { }
-                    }
-                }
-            }
-            SWinf.Close();
-        }
-        public void getWorkedTime(TimeSpan ts)
-        {
-            //EndTime = DateTime.Now;
-            //string WorkedTime = (StartTime - EndTime).Hours + ":" + (StartTime - EndTime).Minutes;
-            StreamWriter swr = System.IO.File.CreateText(System.Environment.MachineName + "_WorkedTime.txt");
-            swr.Write(ts.Hours.ToString() + ":" + ts.Minutes.ToString() + ":" + ts.Seconds.ToString());
-            swr.Close();
-        }
 
+        }
+       
     }
 }

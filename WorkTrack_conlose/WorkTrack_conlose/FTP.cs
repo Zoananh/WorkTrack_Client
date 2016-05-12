@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO.Compression;
-namespace WorkTrack_WindowsService
+
+namespace WorkTrack_conlose
 {
     class FTP
     {
@@ -164,6 +164,6 @@ namespace WorkTrack_WindowsService
                 //MessageBox.Show("Error downloading from URL " + "ftp://hil.netne.net/PCdata/" + "/" + filename, ex.Message);
             }
         }
-    
-}
+
+    }
 }

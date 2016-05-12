@@ -70,7 +70,7 @@ namespace WorkTrack_WindowsService
                     {
                         string[] newProc = new string[2];
                         newProc[0] = str;
-                        newProc[1] = "0,5";
+                        newProc[1] = "0,1";
                         AllProcessList.Add(newProc);
                     }
 
@@ -82,23 +82,39 @@ namespace WorkTrack_WindowsService
                 {
                     string[] newProc1 = new string[2];
                     newProc1[0] = str;
-                    newProc1[1] = "0,5";
+                    newProc1[1] = "0,1";
                     AllProcessList.Add(newProc1);
                 }
             }
 
 
-
-
-
-            StreamWriter swr = System.IO.File.CreateText(@"C:\Users\Zoan Anh\Documents\tempdata\"+System.Environment.MachineName + "_ProcessTime.txt");
-            foreach (string[] str in AllProcessList)
+            using (StreamWriter writer = new StreamWriter(@"C:\Users\Zoan Anh\Documents\tempdata\" + System.Environment.MachineName + "_ProcessTime.txt", false, Encoding.UTF8))
             {
-                swr.Write(str[0] + "/" + str[1] + System.Environment.NewLine);
+                for (int i = 0; i < AllProcessList.Count; i++)
+                {
+                    writer.Write(AllProcessList[i][0] + "/" + AllProcessList[i][1] + System.Environment.NewLine);
+                    writer.Write("Test test tewst");
+                }
 
+
+                //foreach (string[] str in AllProcessList)
+                //{
+                //    writer.Write(str[0].ToString() + "/" + str[1].ToString() + System.Environment.NewLine);
+                //}
+               // writer.Flush();
             }
 
-            swr.Close();
+            // File.AppendAllText(@"C:\Users\Zoan Anh\Documents\tempdata\" + System.Environment.MachineName + "_ProcessTime.txt", AllProcessList);
+            //string path = @"C:\Users\Zoan Anh\Documents\tempdata\" + Environment.MachineName + "_ProcessTime.txt";
+            //using (StreamWriter swr = new StreamWriter(path))
+            //{
+            //    foreach (string[] str in AllProcessList)
+            //    {
+            //        swr.Write(str[0].ToString() + "/" + str[1].ToString() + System.Environment.NewLine);
+
+            //    }
+            //    swr.Flush();
+            //}           
             ProcessList.Clear();
             foreach (string str in CurrentProcessList)
             {
@@ -129,14 +145,14 @@ namespace WorkTrack_WindowsService
                     }
                 }
             }
-            SWinf.Close();
+            SWinf.Flush();
         }
         public void getWorkedTime(TimeSpan ts)
         {
 
             StreamWriter swr = System.IO.File.CreateText(@"C:\Users\Zoan Anh\Documents\tempdata\" + System.Environment.MachineName + "_WorkedTime.txt");
             swr.Write(ts.Hours.ToString() + ":" + ts.Minutes.ToString() + ":" + ts.Seconds.ToString());
-            swr.Close();
+            swr.Flush();
         }
     }
 }

@@ -6,15 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Forms;
 
-namespace WorkTrack_Client
+namespace WorkTrack_conlose
 {
     class GetInformation
     {
-
         List<string> ProcessList = new List<string>();
         List<string> CurrentProcessList = new List<string>();
         List<string[]> AllProcessList = new List<string[]>();
@@ -26,9 +22,6 @@ namespace WorkTrack_Client
             }
 
             Process[] pr = Process.GetProcesses();
-            //.Where(p => !string.IsNullOrEmpty(p.MainWindowTitle))
-            //.Select(p => new { p.MainWindowTitle }).ToString();
-
             foreach (Process poc in pr)
             {
                 if (!string.IsNullOrEmpty(poc.MainWindowTitle))
@@ -116,7 +109,7 @@ namespace WorkTrack_Client
         }
         public void GetInstalledApps()
         {
-            StreamWriter SWinf = System.IO.File.CreateText(System.Environment.MachineName + "_InstalledApp.txt");
+            StreamWriter SWinf = System.IO.File.CreateText(@"C:\Users\Zoan Anh\Documents\tempdata\" + System.Environment.MachineName + "_InstalledApp.txt");
             string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(uninstallKey))
             {
@@ -140,12 +133,10 @@ namespace WorkTrack_Client
         }
         public void getWorkedTime(TimeSpan ts)
         {
-            //EndTime = DateTime.Now;
-            //string WorkedTime = (StartTime - EndTime).Hours + ":" + (StartTime - EndTime).Minutes;
-            StreamWriter swr = System.IO.File.CreateText(System.Environment.MachineName + "_WorkedTime.txt");
+
+            StreamWriter swr = System.IO.File.CreateText(@"C:\Users\Zoan Anh\Documents\tempdata\" + System.Environment.MachineName + "_WorkedTime.txt");
             swr.Write(ts.Hours.ToString() + ":" + ts.Minutes.ToString() + ":" + ts.Seconds.ToString());
             swr.Close();
         }
-
     }
 }
