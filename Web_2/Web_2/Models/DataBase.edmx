@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Applications">
+          <Key>
+            <PropertyRef Name="App_ID" />
+          </Key>
+          <Property Name="App_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="App_name" Type="varchar" MaxLength="1024" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Installedapp">
+          <Key>
+            <PropertyRef Name="App_ID" />
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="App_ID" Type="int" Nullable="false" />
+          <Property Name="PC_ID" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PC">
+          <Key>
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="PC_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PC_name" Type="varchar" MaxLength="1024" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Used_app">
+          <Key>
+            <PropertyRef Name="App_ID" />
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="App_ID" Type="int" Nullable="false" />
+          <Property Name="PC_ID" Type="int" Nullable="false" />
+          <Property Name="Time" Type="varchar" MaxLength="1024" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Worked_time">
+          <Key>
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="PC_ID" Type="int" Nullable="false" />
+          <Property Name="Time" Type="varchar" MaxLength="1024" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_INSTALLE_CONTAINT2_APPLICAT">
+          <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
+          <End Role="Installedapp" Type="Self.Installedapp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Applications">
+              <PropertyRef Name="App_ID" />
+            </Principal>
+            <Dependent Role="Installedapp">
+              <PropertyRef Name="App_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INSTALLE_INSTALLED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Installedapp" Type="Self.Installedapp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Installedapp">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USED_APP_CONTAINT_APPLICAT">
+          <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
+          <End Role="Used_app" Type="Self.Used_app" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Applications">
+              <PropertyRef Name="App_ID" />
+            </Principal>
+            <Dependent Role="Used_app">
+              <PropertyRef Name="App_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USED_APP_USED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Used_app" Type="Self.Used_app" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Used_app">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WORKED_T_WORKED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Worked_time" Type="Self.Worked_time" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Worked_time">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="Applications" EntityType="Self.Applications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Installedapp" EntityType="Self.Installedapp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PC" EntityType="Self.PC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Used_app" EntityType="Self.Used_app" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Worked_time" EntityType="Self.Worked_time" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_INSTALLE_CONTAINT2_APPLICAT" Association="Self.FK_INSTALLE_CONTAINT2_APPLICAT">
+            <End Role="Applications" EntitySet="Applications" />
+            <End Role="Installedapp" EntitySet="Installedapp" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INSTALLE_INSTALLED_PC" Association="Self.FK_INSTALLE_INSTALLED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Installedapp" EntitySet="Installedapp" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USED_APP_CONTAINT_APPLICAT" Association="Self.FK_USED_APP_CONTAINT_APPLICAT">
+            <End Role="Applications" EntitySet="Applications" />
+            <End Role="Used_app" EntitySet="Used_app" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USED_APP_USED_PC" Association="Self.FK_USED_APP_USED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Used_app" EntitySet="Used_app" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WORKED_T_WORKED_PC" Association="Self.FK_WORKED_T_WORKED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Worked_time" EntitySet="Worked_time" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Applications">
+          <Key>
+            <PropertyRef Name="App_ID" />
+          </Key>
+          <Property Name="App_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="App_name" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Installedapp" Relationship="Self.FK_INSTALLE_CONTAINT2_APPLICAT" FromRole="Applications" ToRole="Installedapp" />
+          <NavigationProperty Name="Used_app" Relationship="Self.FK_USED_APP_CONTAINT_APPLICAT" FromRole="Applications" ToRole="Used_app" />
+        </EntityType>
+        <EntityType Name="Installedapp">
+          <Key>
+            <PropertyRef Name="App_ID" />
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="App_ID" Type="Int32" Nullable="false" />
+          <Property Name="PC_ID" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Applications" Relationship="Self.FK_INSTALLE_CONTAINT2_APPLICAT" FromRole="Installedapp" ToRole="Applications" />
+          <NavigationProperty Name="PC" Relationship="Self.FK_INSTALLE_INSTALLED_PC" FromRole="Installedapp" ToRole="PC" />
+        </EntityType>
+        <EntityType Name="PC">
+          <Key>
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="PC_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PC_name" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Installedapp" Relationship="Self.FK_INSTALLE_INSTALLED_PC" FromRole="PC" ToRole="Installedapp" />
+          <NavigationProperty Name="Used_app" Relationship="Self.FK_USED_APP_USED_PC" FromRole="PC" ToRole="Used_app" />
+          <NavigationProperty Name="Worked_time" Relationship="Self.FK_WORKED_T_WORKED_PC" FromRole="PC" ToRole="Worked_time" />
+        </EntityType>
+        <EntityType Name="Used_app">
+          <Key>
+            <PropertyRef Name="App_ID" />
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="App_ID" Type="Int32" Nullable="false" />
+          <Property Name="PC_ID" Type="Int32" Nullable="false" />
+          <Property Name="Time" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Applications" Relationship="Self.FK_USED_APP_CONTAINT_APPLICAT" FromRole="Used_app" ToRole="Applications" />
+          <NavigationProperty Name="PC" Relationship="Self.FK_USED_APP_USED_PC" FromRole="Used_app" ToRole="PC" />
+        </EntityType>
+        <EntityType Name="Worked_time">
+          <Key>
+            <PropertyRef Name="PC_ID" />
+          </Key>
+          <Property Name="PC_ID" Type="Int32" Nullable="false" />
+          <Property Name="Time" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="PC" Relationship="Self.FK_WORKED_T_WORKED_PC" FromRole="Worked_time" ToRole="PC" />
+        </EntityType>
+        <Association Name="FK_INSTALLE_CONTAINT2_APPLICAT">
+          <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
+          <End Role="Installedapp" Type="Self.Installedapp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Applications">
+              <PropertyRef Name="App_ID" />
+            </Principal>
+            <Dependent Role="Installedapp">
+              <PropertyRef Name="App_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USED_APP_CONTAINT_APPLICAT">
+          <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
+          <End Role="Used_app" Type="Self.Used_app" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Applications">
+              <PropertyRef Name="App_ID" />
+            </Principal>
+            <Dependent Role="Used_app">
+              <PropertyRef Name="App_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_INSTALLE_INSTALLED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Installedapp" Type="Self.Installedapp" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Installedapp">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USED_APP_USED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Used_app" Type="Self.Used_app" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Used_app">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WORKED_T_WORKED_PC">
+          <End Role="PC" Type="Self.PC" Multiplicity="1" />
+          <End Role="Worked_time" Type="Self.Worked_time" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="PC">
+              <PropertyRef Name="PC_ID" />
+            </Principal>
+            <Dependent Role="Worked_time">
+              <PropertyRef Name="PC_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PC_TrackEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Applications" EntityType="Self.Applications" />
+          <EntitySet Name="Installedapp" EntityType="Self.Installedapp" />
+          <EntitySet Name="PC" EntityType="Self.PC" />
+          <EntitySet Name="Used_app" EntityType="Self.Used_app" />
+          <EntitySet Name="Worked_time" EntityType="Self.Worked_time" />
+          <AssociationSet Name="FK_INSTALLE_CONTAINT2_APPLICAT" Association="Self.FK_INSTALLE_CONTAINT2_APPLICAT">
+            <End Role="Applications" EntitySet="Applications" />
+            <End Role="Installedapp" EntitySet="Installedapp" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USED_APP_CONTAINT_APPLICAT" Association="Self.FK_USED_APP_CONTAINT_APPLICAT">
+            <End Role="Applications" EntitySet="Applications" />
+            <End Role="Used_app" EntitySet="Used_app" />
+          </AssociationSet>
+          <AssociationSet Name="FK_INSTALLE_INSTALLED_PC" Association="Self.FK_INSTALLE_INSTALLED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Installedapp" EntitySet="Installedapp" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USED_APP_USED_PC" Association="Self.FK_USED_APP_USED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Used_app" EntitySet="Used_app" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WORKED_T_WORKED_PC" Association="Self.FK_WORKED_T_WORKED_PC">
+            <End Role="PC" EntitySet="PC" />
+            <End Role="Worked_time" EntitySet="Worked_time" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="PC_TrackEntities">
+          <EntitySetMapping Name="Applications">
+            <EntityTypeMapping TypeName="Model.Applications">
+              <MappingFragment StoreEntitySet="Applications">
+                <ScalarProperty Name="App_ID" ColumnName="App_ID" />
+                <ScalarProperty Name="App_name" ColumnName="App_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Installedapp">
+            <EntityTypeMapping TypeName="Model.Installedapp">
+              <MappingFragment StoreEntitySet="Installedapp">
+                <ScalarProperty Name="App_ID" ColumnName="App_ID" />
+                <ScalarProperty Name="PC_ID" ColumnName="PC_ID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PC">
+            <EntityTypeMapping TypeName="Model.PC">
+              <MappingFragment StoreEntitySet="PC">
+                <ScalarProperty Name="PC_ID" ColumnName="PC_ID" />
+                <ScalarProperty Name="PC_name" ColumnName="PC_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Used_app">
+            <EntityTypeMapping TypeName="Model.Used_app">
+              <MappingFragment StoreEntitySet="Used_app">
+                <ScalarProperty Name="App_ID" ColumnName="App_ID" />
+                <ScalarProperty Name="PC_ID" ColumnName="PC_ID" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Worked_time">
+            <EntityTypeMapping TypeName="Model.Worked_time">
+              <MappingFragment StoreEntitySet="Worked_time">
+                <ScalarProperty Name="PC_ID" ColumnName="PC_ID" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

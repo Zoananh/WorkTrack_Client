@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f7cdc12c1f8c421b96b4c3fa07dc39b9" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.Applications" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Installedapp" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PC" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Used_app" Width="1.5" PointX="5.25" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Worked_time" Width="1.5" PointX="2.75" PointY="6.5" IsExpanded="true" />
+        <AssociationConnector Association="Model.FK_INSTALLE_CONTAINT2_APPLICAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_USED_APP_CONTAINT_APPLICAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_INSTALLE_INSTALLED_PC" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_USED_APP_USED_PC" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.FK_WORKED_T_WORKED_PC" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

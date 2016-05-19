@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Общая информация";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="container">
+    
+    <div class="row">
+        <div class="col-sm-3">
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default">Выберите ПК</button>
+                <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">PC01</a></li>
+                    <li><a href="#">PC02</a></li>
+                    <li><a href="#">PC03</a></li>
+                    <li><a href="#">PC04</a></li>
+                    <li><a href="#">PC05</a></li>
+                </ul>
+            </div>
+            <h4>Время работы ПК: 10ч</h4>
+
+        </div>
+        <div class="col-sm-9">
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Время работы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Microsoft Visual Studio 2013</td>
+                        <td>1,5ч</td>
+                    </tr>
+                    <tr>
+                        <td>Google Chrome</td>
+                        <td>3ч</td>
+                    </tr>
+                    <tr>
+                        <td>Skype</td>
+                        <td>6ч</td>
+                    </tr>
+                    <tr>
+                        <td>TeamSpeak 3</td>
+                        <td>3,3ч</td>
+                    </tr>
+                    <tr>
+                        <td>Microsoft Office 2013</td>
+                        <td>1,1ч</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

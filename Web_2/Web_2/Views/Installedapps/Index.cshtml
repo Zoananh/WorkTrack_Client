@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Web_2.Models.Installedapp>
+
+@{
+    ViewBag.Title = "Список установленных проиложений";
+}
+
+
+<h2>Viewbag.selectedpc</h2>
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-3">
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default">Выберите ПК</button>
+                <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    @{
+                        foreach (var pc in Model)
+                        {
+
+
+                            <li><a href="#"> @Html.DisplayFor(modelItem => pc.PC.PC_name) </a></li>
+
+                        }
+
+
+
+                    }
+
+
+                </ul>
+            </div>
+            <h4>Время работы ПК: 10ч</h4>
+
+
+        </div>
+        <div class="col-sm-9">
+
+            <table class="table">
+                <tr>
+                    <th>
+                        Навание приложения
+                    </th>
+                    <th>
+                        Дата
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Applications.App_name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+

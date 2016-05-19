@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="container">
+
+        <div class="jumbotron">
+            <h1>Информационный сайт</h1>
+            <p>На сайте вы можете просматривать данных о ПК в корпоративной сети.</p>
+        </div>
+        <h3>Выберите дату:</h3>
+        <div class="container">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker2'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                        $(function () {
+                            $('#datetimepicker2').datetimepicker({
+                                locale: 'ru'
+                            });
+                        });
+                </script>
+            </div>
+        </div>
+
+</div>

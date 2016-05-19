@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Список установленных приложений";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="container">
+    
+
+
+    <div class="col-sm-2">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default">Выберите ПК</button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#">PC01</a></li>
+                <li><a href="#">PC02</a></li>
+                <li><a href="#">PC03</a></li>
+                <li><a href="#">PC04</a></li>
+                <li><a href="#">PC05</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="col-sm-9">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Издатель</th>
+                    <th>Дата установки</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Microsoft Visual Studio 2013</td>
+                    <td>Microsoft Corporation</td>
+                    <td>14.05.2014</td>
+                </tr>
+                <tr>
+                    <td>Google Chrome</td>
+                    <td>Google inc.</td>
+                    <td>13.07.2012</td>
+                </tr>
+                <tr>
+                    <td>Microsoft ASP.NET Web Pages 2 - Visual Studio 2013 - ENU</td>
+                    <td>Microsoft Corporation</td>
+                    <td>15.09.2015</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>

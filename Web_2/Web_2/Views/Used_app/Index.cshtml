@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Web_2.Models.Used_app>
+
+@{
+    ViewBag.Title = "Общая информация";
+}
+
+
+@*<h2>Viewbag.SelectedPC</h2>*@
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-3">
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default">Выберите ПК</button>
+                <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    @{
+                        List<string> pcnamelist = new List<string>();
+                        IEnumerable<string> distinctlist;
+                        foreach (var pc in Model)
+                        {
+
+                            pcnamelist.Add(pc.PC.PC_name);
+
+                        }
+                        distinctlist = pcnamelist.Distinct();
+
+                        foreach (var name in distinctlist)
+                        {
+                            <li>@Html.ActionLink(name, "SelectedPC", "Used_app", new { SelectedPC = name }, null) </li>
+                        }
+
+                    }
+
+                   
+
+                </ul>
+            </div>
+            <h4>Время работы ПК: 10ч</h4>
+        </div>
+            <div class="col-sm-9">
+
+                <table class="table">
+                    <tr>
+                        <th>
+                            Название приложения
+                        </th>
+                        <th>
+                            Время работы
+                        </th>
+                        <th> </th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Applications.App_name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Time)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+
+                    
+                    @*@foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Applications.App_name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Time)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }*@
+
+                </table>
+
+            </div>
+  
+              
+        </div>
+    </div>
+
+
+
+
+
+
+
