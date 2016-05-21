@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Web_2.Models.PC>
+
+@{
+    ViewBag.Title = "Редактирование";
+}
+
+<h2>Список ПК</h2>
+
+<p>
+    @Html.ActionLink("Добавить новый ПК", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Название ПК
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PC_name)
+        </td>
+        @if (User.IsInRole("Admin"))
+        {
+        <td>
+            @Html.ActionLink("Редактировать", "Edit", new { id = item.PC_ID }) |
+            @Html.ActionLink("Удалить", "Delete", new { id = item.PC_ID })
+        </td>
+        }
+    </tr>
+}
+
+</table>

@@ -18,8 +18,14 @@ namespace Web_2.Controllers
         public ActionResult Index()
         {
             var used_app = db.Used_app.Include(u => u.Applications).Include(u => u.PC);
-            //ViewBag.PCname = db.PC.i
-            return View(used_app.ToList());
+            //var used_app = db.Used_app.Select(x => x.PC_ID).Distinct();
+            //myCollection.Select(x => x.Name).Distinct().ToList();
+            if (User.IsInRole("Admin") || User.IsInRole("User"))
+                return View(used_app.ToList());
+            else
+                return View("UnAuthorization");
+
+
         }
 
         public ActionResult SelectedPC(string SelectedPC)
@@ -71,13 +77,13 @@ namespace Web_2.Controllers
         }
 
         // GET: Used_app/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? pcID, int? appID)
         {
-            if (id == null)
+            if (pcID == null || appID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Used_app used_app = db.Used_app.Find(id);
+            Used_app used_app = db.Used_app.Find(pcID, pcID);
             if (used_app == null)
             {
                 return HttpNotFound();

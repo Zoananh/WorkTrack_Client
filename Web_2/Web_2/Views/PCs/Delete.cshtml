@@ -1,0 +1,34 @@
+﻿@model Web_2.Models.PC
+
+@{
+    ViewBag.Title = "Удалить";
+}
+
+<h2>Удаление ПК</h2>
+
+<h3>Вы точно хотите удалить ?</h3>
+<div>
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Название ПК:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PC_name)
+        </dd>
+
+        
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Назад", "Index")
+        </div>
+    }
+</div>

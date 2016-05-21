@@ -10,128 +10,112 @@ using Web_2.Models;
 
 namespace Web_2.Controllers
 {
-    public class InstalledappsController : Controller
+    public class PCsController : Controller
     {
         private PC_TrackEntities db = new PC_TrackEntities();
 
-        // GET: Installedapps
+        // GET: PCs
         public ActionResult Index()
         {
-            var installedapp = db.Installedapp.Include(i => i.Applications).Include(i => i.PC);
-            
-            if (User.IsInRole("Admin") || User.IsInRole("User"))
-                return View(installedapp.ToList());
-            else
-                return View("UnAuthorization");
+            var pC = db.PC.Include(p => p.Worked_time);
+            return View(pC.ToList());
         }
 
-
-        public ActionResult SelectedPC(string SelectedPC)
-        {
-            var selected = db.PC.FirstOrDefault(a => a.PC_name == SelectedPC);
-            return View("Index", db.Installedapp.Where(m => m.PC_ID == selected.PC_ID));
-        }
-
-
-        // GET: Installedapps/Details/5
+        // GET: PCs/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Installedapp installedapp = db.Installedapp.Find(id);
-            if (installedapp == null)
+            PC pC = db.PC.Find(id);
+            if (pC == null)
             {
                 return HttpNotFound();
             }
-            return View(installedapp);
+            return View(pC);
         }
 
-        // GET: Installedapps/Create
+        // GET: PCs/Create
         public ActionResult Create()
         {
-            ViewBag.App_ID = new SelectList(db.Applications, "App_ID", "App_name");
-            ViewBag.PC_ID = new SelectList(db.PC, "PC_ID", "PC_name");
+            ViewBag.PC_ID = new SelectList(db.Worked_time, "PC_ID", "Time");
             return View();
         }
 
-        // POST: Installedapps/Create
+        // POST: PCs/Create
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "App_ID,PC_ID,Date")] Installedapp installedapp)
+        public ActionResult Create([Bind(Include = "PC_ID,PC_name")] PC pC)
         {
             if (ModelState.IsValid)
             {
-                db.Installedapp.Add(installedapp);
+                db.PC.Add(pC);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.App_ID = new SelectList(db.Applications, "App_ID", "App_name", installedapp.App_ID);
-            ViewBag.PC_ID = new SelectList(db.PC, "PC_ID", "PC_name", installedapp.PC_ID);
-            return View(installedapp);
+            ViewBag.PC_ID = new SelectList(db.Worked_time, "PC_ID", "Time", pC.PC_ID);
+            return View(pC);
         }
 
-        // GET: Installedapps/Edit/5
+        // GET: PCs/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Installedapp installedapp = db.Installedapp.Find(id);
-            if (installedapp == null)
+            PC pC = db.PC.Find(id);
+            if (pC == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.App_ID = new SelectList(db.Applications, "App_ID", "App_name", installedapp.App_ID);
-            ViewBag.PC_ID = new SelectList(db.PC, "PC_ID", "PC_name", installedapp.PC_ID);
-            return View(installedapp);
+            ViewBag.PC_ID = new SelectList(db.Worked_time, "PC_ID", "Time", pC.PC_ID);
+            return View(pC);
         }
 
-        // POST: Installedapps/Edit/5
+        // POST: PCs/Edit/5
         // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "App_ID,PC_ID,Date")] Installedapp installedapp)
+        public ActionResult Edit([Bind(Include = "PC_ID,PC_name")] PC pC)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(installedapp).State = EntityState.Modified;
+                db.Entry(pC).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.App_ID = new SelectList(db.Applications, "App_ID", "App_name", installedapp.App_ID);
-            ViewBag.PC_ID = new SelectList(db.PC, "PC_ID", "PC_name", installedapp.PC_ID);
-            return View(installedapp);
+            ViewBag.PC_ID = new SelectList(db.Worked_time, "PC_ID", "Time", pC.PC_ID);
+            return View(pC);
         }
 
-        // GET: Installedapps/Delete/5
+        // GET: PCs/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Installedapp installedapp = db.Installedapp.Find(id);
-            if (installedapp == null)
+            PC pC = db.PC.Find(id);
+            if (pC == null)
             {
                 return HttpNotFound();
             }
-            return View(installedapp);
+            return View(pC);
         }
 
-        // POST: Installedapps/Delete/5
+        // POST: PCs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Installedapp installedapp = db.Installedapp.Find(id);
-            db.Installedapp.Remove(installedapp);
+            PC pC = db.PC.Find(id);
+            db.PC.Remove(pC);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

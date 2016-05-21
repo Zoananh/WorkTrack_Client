@@ -10,7 +10,7 @@
 
 </head>
 <body>
-    <nav role="navigation" class="navbar navbar-fixed-top">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -25,10 +25,15 @@
             <!-- Collection of nav links and other content for toggling -->
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Домашняя страница", "Index", "Home")</li>
+                    
                     <li>@Html.ActionLink("Общая информация", "Index", "Used_app")</li>
                     <li>@Html.ActionLink("Список установленных приложений", "Index", "Installedapps")</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <li>@Html.ActionLink("Редактировать ПК", "Index", "PCs")</li>
+                    }
                 </ul>
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
