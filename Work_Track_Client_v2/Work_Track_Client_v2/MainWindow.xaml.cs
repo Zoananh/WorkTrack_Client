@@ -36,10 +36,12 @@ namespace Work_Track_Client_v2
         List<string> ProcessList = new List<string>();
         System.Timers.Timer CheckprocTimer;
         System.Timers.Timer mainwindowTimer;
+        DateTime t1, t2;
         Process[] pr;
         int pcID;
         bool doit,insert;
         string pcname;
+        CheckingClass checkcl = new CheckingClass();
         public MainWindow()
         {
             InitializeComponent();
@@ -47,7 +49,7 @@ namespace Work_Track_Client_v2
             CheckprocTimer = new System.Timers.Timer();
             CheckprocTimer.Elapsed += CheckprocTimer_elapsed;
             CheckprocTimer.Interval = 30000;
-            
+            t1 = DateTime.Now;
 
             //mainwindowTimer = new System.Timers.Timer();
             //mainwindowTimer.Elapsed += mainwindowTimer_elapsed;
@@ -61,16 +63,15 @@ namespace Work_Track_Client_v2
             doit = true;
             pcname = System.Environment.MachineName;
             bgw1.RunWorkerAsync();
-            CheckprocTimer.Start();
-        }
 
+        }
         private void worker_CheckprocTimer_elapsedCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             
         }
         private void worker_MainWindowProc_elapsedCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            
+            CheckprocTimer.Start();
         }
 
         private void CheckprocTimer_elapsed(object sender, EventArgs e)
@@ -80,10 +81,37 @@ namespace Work_Track_Client_v2
 
         }
 
+
+        public List<int> CheckDistinct(List<Applications> allapp,List<Installedapp> installedapp)
+        {
+            List<int> strList = new List<int>();
+            bool flag = true;
+            for (int i = 0; i < installedapp.Count; i++)
+            {
+                for (int j = 0; j < allapp.Count; j++)
+                {
+                    if (installedapp[i].App_name == allapp[j].App_names)
+                    {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag)
+                {
+                    strList.Add(i);
+                    flag = true;
+                }
+            }
+
+
+
+            return strList;
+        }
+
         public void MainWindowProc(object sender, DoWorkEventArgs e)
         {
             InstalledAppsList.Clear();
-            int userCount;
+            //int userCount;
             InstalledAppsList = getinf.GetInstalledApps();
             pr = Process.GetProcesses();
 
@@ -99,46 +127,50 @@ namespace Work_Track_Client_v2
 
             pcID = getDB.getPcID();
             AllAppsList = getDB.getAllApplicationslist();
+            checkcl.CheckFirstDate(conn,pcID);
+            // НАЧИНАТЬ ОТСЮДА !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if (checkcl.CheckReboot(conn, pcID))
+            {
 
+
+
+            }
+
+        // ТУТ ЗАКАНЧИВАЕТСФЯ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            List<int> newapps = CheckDistinct(AllAppsList, InstalledAppsList);
             SqlConnection connection = new SqlConnection(conn);
             //Open the connection
             connection.Open();
-            using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(*) FROM Applications WHERE App_names LIKE @App_naz AND App_publisher LIKE @App_pub", connection))
+
+            if (newapps.Count > 0)
             {
-                sqlCommand.Parameters.Add(new SqlParameter("@App_naz", SqlDbType.VarChar));
-                sqlCommand.Parameters.Add(new SqlParameter("@App_pub", SqlDbType.VarChar));
-
-                foreach (Installedapp apps in InstalledAppsList)
+                using (SqlCommand sqlgetidcommand = new SqlCommand("INSERT INTO Applications(App_names,App_publisher) VALUES (@App_nm,@App_pub)", connection))
                 {
-                    sqlCommand.Parameters["@App_naz"].Value = apps.App_name;
-                    sqlCommand.Parameters["@App_pub"].Value = apps.App_publisher;
-                    userCount = (int)sqlCommand.ExecuteScalar();
-                    if (userCount == 0)
+                    sqlgetidcommand.Parameters.Add(new SqlParameter("@App_nm", SqlDbType.VarChar));
+                    sqlgetidcommand.Parameters.Add(new SqlParameter("@App_pub", SqlDbType.VarChar));
+                    for (int i = 0; i < newapps.Count; i++)
                     {
-                        using (SqlCommand sqlgetidcommand = new SqlCommand("INSERT INTO Applications(App_names,App_publisher) VALUES (@App_nm,@App_pub)", connection))
-                        {
-                            //sqlCommand.Parameters.AddWithValue("@username", userName);
-                            sqlgetidcommand.Parameters.AddWithValue("@App_nm", apps.App_name);
-                            sqlgetidcommand.Parameters.AddWithValue("@App_pub", apps.App_publisher);
-                            sqlgetidcommand.ExecuteNonQuery();
-                            sqlgetidcommand.Parameters.Clear();
-                        }
+                        sqlgetidcommand.Parameters["@App_nm"].Value = InstalledAppsList[newapps[i]].App_name;
+                        sqlgetidcommand.Parameters["@App_pub"].Value = InstalledAppsList[newapps[i]].App_publisher;
+                    }
 
-                        }                   
                 }
+            }
 
-                using (SqlCommand sqlsetidcommand = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names=@App_names", connection))
+                using (SqlCommand sqlsetidcommand = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names=@App_names AND App_publisher=@App_pub", connection))
                 {
                     sqlsetidcommand.Parameters.Add(new SqlParameter("@App_names", SqlDbType.VarChar));
-                    
-                    for (int i = 0; i < InstalledAppsList.Count; i++)
+                sqlsetidcommand.Parameters.Add(new SqlParameter("@App_pub", SqlDbType.VarChar));
+
+                for (int i = 0; i < InstalledAppsList.Count; i++)
                     {
                         sqlsetidcommand.Parameters["@App_names"].Value = InstalledAppsList[i].App_name;
-                        InstalledAppsList[i].App_ID = sqlsetidcommand.ExecuteScalar().ToString();
+                    sqlsetidcommand.Parameters["@App_pub"].Value = InstalledAppsList[i].App_publisher;
+                    InstalledAppsList[i].App_ID = sqlsetidcommand.ExecuteScalar().ToString();
                         InstalledAppsList[i].PC_ID = pcID.ToString();
                     }
                 }
-            }
+            
             using (SqlCommand sqldelete = new SqlCommand("DELETE FROM Installedapp WHERE PC_ID=@PC_id", connection))
             {
                     sqldelete.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
@@ -238,7 +270,26 @@ namespace Work_Track_Client_v2
 
         }
 
+        private void MainWInd_Closing(object sender, CancelEventArgs e)
+        {
+            t2 = DateTime.Now;
+            TimeSpan ts = t2 - t1;
+            SqlConnection sqlclosingapp = new SqlConnection(conn);
+            //Open the connection
+            sqlclosingapp.Open();
+            using (SqlCommand sqlinsertworkedtime = new SqlCommand("INSERT INTO Worked_time (PC_ID,Worked_time,Worked_Date) VALUES (@PC_id,@Worked_time,@Worked_Date)", sqlclosingapp))
+            {
+                sqlinsertworkedtime.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                sqlinsertworkedtime.Parameters.Add(new SqlParameter("@Worked_time", SqlDbType.VarChar));
+                sqlinsertworkedtime.Parameters.Add(new SqlParameter("@Worked_Date", SqlDbType.Date));
+                sqlinsertworkedtime.Parameters["@PC_id"].Value = pcID;
+                sqlinsertworkedtime.Parameters["@Worked_time"].Value = ts.Hours.ToString() + "." + ts.Minutes.ToString() + "." + ts.Seconds.ToString();
+                sqlinsertworkedtime.Parameters["@Worked_Date"].Value = DateTime.Now.ToShortDateString();
+            }
 
+            sqlclosingapp.Dispose();
+
+        }
 
         private void MainWInd_Loaded(object sender, RoutedEventArgs e)
         {

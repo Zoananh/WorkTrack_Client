@@ -154,18 +154,80 @@ namespace Work_Track_Client_v2
                     }
                 }
             }
-            List<Installedapp> InstalledList1 = InstalledList.Distinct().ToList();
-            //foo(x => x.typeID).Distinct();
-            return InstalledList1;
+
+            List<Installedapp> noduplicatesList = InstalledList.Distinct(new InstalledappComparer()).ToList<Installedapp>();
+
+
+            return noduplicatesList;
         }
-        
-        public void getWorkedTime(TimeSpan ts)
+
+        public List<Used_app> Reboot_GetUsedApp(int pcID)
         {
-            //EndTime = DateTime.Now;
-            //string WorkedTime = (StartTime - EndTime).Hours + ":" + (StartTime - EndTime).Minutes;
-            StreamWriter swr = System.IO.File.CreateText(pcname + "_WorkedTime.txt");
-            swr.Write(ts.Hours.ToString() + ":" + ts.Minutes.ToString() + ":" + ts.Seconds.ToString());
-            swr.Close();
+            List<Used_app> UApp = new List<Used_app>();
+            Used_app _UApp = new Used_app();
+            SqlConnection sqlcon = new SqlConnection(conn);
+            //Open the connection
+            sqlcon.Open();
+
+            using (SqlCommand sqlcmd = new SqlCommand("SELECT * FROM Used_app WHERE PC_ID=@PC_id AND Used_date=@Used_date", sqlcon))
+            {
+                sqlcmd.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                sqlcmd.Parameters["@PC_id"].Value = pcID;
+                sqlcmd.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
+                sqlcmd.Parameters["@Used_date"].Value = DateTime.Now.ToShortDateString();
+                object[] obj = new object[4];
+                using (var reader = sqlcmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reader.GetValues(obj);
+                        _UApp.App_ID = obj[0].ToString();
+                        _UApp.PC_ID = obj[1].ToString();
+                        _UApp.Used_time = obj[2].ToString();
+                        _UApp.Used_date = obj[3].ToString();
+                        Used_app _Clone = (Used_app)_UApp.Clone();
+                        UApp.Add(_Clone);
+                    }
+                }
+            }
+
+            sqlcon.Close();
+            return UApp;
+
+        }
+
+        public List<Worked_time> Reboot_GetWorkedTime(int pcID)
+        {
+            List<Worked_time> WorkedTime = new List<Worked_time>();
+            Worked_time _WorkedTime = new Worked_time();
+            SqlConnection sqlcon2 = new SqlConnection(conn);
+            //Open the connection
+            sqlcon2.Open();
+
+            using (SqlCommand sqlcmd2 = new SqlCommand("SELECT * FROM Worked_time WHERE PC_ID=@PC_id AND Worked_Date=@Worked_date", sqlcon2))
+            {
+                sqlcmd2.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                sqlcmd2.Parameters["@PC_id"].Value = pcID;
+                sqlcmd2.Parameters.Add(new SqlParameter("@Worked_date", SqlDbType.Date));
+                sqlcmd2.Parameters["@Worked_date"].Value = DateTime.Now.ToShortDateString();
+                object[] obj = new object[4];
+                using (var reader = sqlcmd2.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reader.GetValues(obj);
+                        _WorkedTime.PC_ID = obj[0].ToString();
+                        _WorkedTime.Worked_Time = obj[1].ToString();
+                        _WorkedTime.Worked_Date = obj[2].ToString();
+                        _WorkedTime.rebootcount =Convert.ToInt32(obj[3].ToString());
+                        Worked_time _Clone = (Worked_time)_WorkedTime.Clone();
+                        WorkedTime.Add(_Clone);
+                    }
+                }
+            }
+
+            sqlcon2.Close();
+            return WorkedTime;
         }
     }
 }

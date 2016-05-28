@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Work_Track_Client_v2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="151.302" Width="359.115" Loaded="MainWInd_Loaded">
+        Title="MainWindow" Height="151.302" Width="359.115" Loaded="MainWInd_Loaded" Closing="MainWInd_Closing">
     <Grid>
         <Label x:Name="lbConnection" Content="Подключение:" HorizontalAlignment="Left" Margin="121,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lbStatus" Content="Статус:" HorizontalAlignment="Left" Margin="121,55,0,0" VerticalAlignment="Top"/>

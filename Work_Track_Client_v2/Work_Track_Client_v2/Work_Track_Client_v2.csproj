@@ -57,7 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Applications.cs" />
-    <Compile Include="ConnectionCheck.cs" />
+    <Compile Include="CheckingClass.cs" />
     <Compile Include="GetFromDB.cs" />
     <Compile Include="GetInformation.cs" />
     <Compile Include="ICLONE.cs" />
