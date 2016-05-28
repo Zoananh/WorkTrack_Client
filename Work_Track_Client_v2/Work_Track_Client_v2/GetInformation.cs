@@ -24,7 +24,7 @@ namespace Work_Track_Client_v2
         string pcname = System.Environment.MachineName;
         Installedapp Apps;
         List<Installedapp> InstalledList = new List<Installedapp>();
-        List<Installedapp> InstalledList1;
+        //List<Installedapp> InstalledList1;
         public List<Used_app> CheckProcess(List<string> prlist, bool doit)
         {            
             uselist.Clear();
@@ -143,8 +143,8 @@ namespace Work_Track_Client_v2
                             Apps = new Installedapp();
                             Apps.App_name = sk.GetValue("DisplayName").ToString();
                             Apps.App_publisher = sk.GetValue("Publisher").ToString();
-                            DateTime d = DateTime.ParseExact(InstallDate, "yyyyMdd", null);
-                            Apps.App_installdate = d.ToShortDateString();
+                            //DateTime d = DateTime.ParseExact(InstallDate, "yyyyMdd", null);
+                            Apps.App_installdate = DateTime.ParseExact(InstallDate, "yyyyMdd", null);
 
                             //Installedapp tempApps = (Installedapp)Apps.Clone();
                             InstalledList.Add(Apps);
@@ -154,8 +154,9 @@ namespace Work_Track_Client_v2
                     }
                 }
             }
-            InstalledList1 = InstalledList.Distinct().ToList();
-            return InstalledList;
+            List<Installedapp> InstalledList1 = InstalledList.Distinct().ToList();
+            //foo(x => x.typeID).Distinct();
+            return InstalledList1;
         }
         
         public void getWorkedTime(TimeSpan ts)

@@ -11,7 +11,7 @@ namespace Work_Track_Client_v2
         public string Installeapp_ID;
         public string App_ID;
         public string PC_ID;
-        public string App_installdate;
+        public DateTime App_installdate;
         public string App_name;
         public string App_publisher;
 

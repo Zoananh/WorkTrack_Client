@@ -38,7 +38,7 @@ namespace Work_Track_Client_v2
         System.Timers.Timer mainwindowTimer;
         Process[] pr;
         int pcID;
-        bool doit;
+        bool doit,insert;
         string pcname;
         public MainWindow()
         {
@@ -46,14 +46,14 @@ namespace Work_Track_Client_v2
 
             CheckprocTimer = new System.Timers.Timer();
             CheckprocTimer.Elapsed += CheckprocTimer_elapsed;
-            CheckprocTimer.Interval = 10000;
-            CheckprocTimer.Start();
+            CheckprocTimer.Interval = 30000;
+            
 
             //mainwindowTimer = new System.Timers.Timer();
             //mainwindowTimer.Elapsed += mainwindowTimer_elapsed;
             //mainwindowTimer.Interval = 1000;
             //mainwindowTimer.Start();
-
+            insert = true;
             bgw.DoWork += worker_onCheckprocTimer_elapsed;
             bgw.RunWorkerCompleted += worker_CheckprocTimer_elapsedCompleted;
             bgw1.DoWork += MainWindowProc;
@@ -61,6 +61,7 @@ namespace Work_Track_Client_v2
             doit = true;
             pcname = System.Environment.MachineName;
             bgw1.RunWorkerAsync();
+            CheckprocTimer.Start();
         }
 
         private void worker_CheckprocTimer_elapsedCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -138,11 +139,17 @@ namespace Work_Track_Client_v2
                     }
                 }
             }
-            using (SqlCommand sqlinsertinstalledapp = new SqlCommand("INSERT INTO Installedapp (App_ID,PC_ID,App_installdate) VALUES (@App_id,@PC_id,@App_insdate)", connection))
+            using (SqlCommand sqldelete = new SqlCommand("DELETE FROM Installedapp WHERE PC_ID=@PC_id", connection))
             {
-                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@App_id", SqlDbType.VarChar));
-                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.VarChar));
-                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@App_insdate", SqlDbType.VarChar));
+                    sqldelete.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                    sqldelete.Parameters["@PC_id"].Value = pcID.ToString();
+                    sqldelete.ExecuteNonQuery();
+            }
+            using (SqlCommand sqlinsertinstalledapp = new SqlCommand("INSERT INTO Installedapp (App_ID,PC_ID,Installed_date) VALUES (@App_id,@PC_id,@App_insdate)", connection))
+            {
+                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@App_id", SqlDbType.Int));
+                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                sqlinsertinstalledapp.Parameters.Add(new SqlParameter("@App_insdate", SqlDbType.Date));
                 for (int i = 0; i < InstalledAppsList.Count; i++)
                 {
                     sqlinsertinstalledapp.Parameters["@App_id"].Value = InstalledAppsList[i].App_ID;
@@ -158,8 +165,76 @@ namespace Work_Track_Client_v2
 
         public void worker_onCheckprocTimer_elapsed(object sender, DoWorkEventArgs e)
         {
+            int userCount=0;
             UsedappList = getinf.CheckProcess(ProcessList, doit);
             doit = false;
+            SqlConnection sqlconnection = new SqlConnection(conn);
+            //Open the connection
+            sqlconnection.Open();
+
+            using (SqlCommand sqlCommand2 = new SqlCommand("SELECT COUNT(*) FROM Applications WHERE App_names LIKE @App_naz", sqlconnection))
+            {
+                sqlCommand2.Parameters.Add(new SqlParameter("@App_naz", SqlDbType.VarChar));
+
+                foreach (Used_app apps in UsedappList)
+                {
+                    sqlCommand2.Parameters["@App_naz"].Value = apps.App_name;
+                    userCount = (int)sqlCommand2.ExecuteScalar();
+                    if (userCount == 0)
+                    {
+                        using (SqlCommand sqlgetidcommand2 = new SqlCommand("INSERT INTO Applications(App_names,App_publisher) VALUES (@App_nm,@App_pub)", sqlconnection))
+                        {
+                            //sqlCommand.Parameters.AddWithValue("@username", userName);
+                            sqlgetidcommand2.Parameters.AddWithValue("@App_nm", apps.App_name);
+                            sqlgetidcommand2.Parameters.AddWithValue("@App_pub", "Unknow");
+                            sqlgetidcommand2.ExecuteNonQuery();
+                            sqlgetidcommand2.Parameters.Clear();
+                        }
+
+                    }
+                }
+
+                using (SqlCommand sqlsetidcommand2 = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names=@App_names", sqlconnection))
+                {
+                    sqlsetidcommand2.Parameters.Add(new SqlParameter("@App_names", SqlDbType.VarChar));
+
+                    for (int i = 0; i < UsedappList.Count; i++)
+                    {
+                        sqlsetidcommand2.Parameters["@App_names"].Value = UsedappList[i].App_name;
+                        UsedappList[i].App_ID = sqlsetidcommand2.ExecuteScalar().ToString();
+                        UsedappList[i].PC_ID = pcID.ToString();
+                    }
+                }
+            }
+
+            using (SqlCommand sqldelete2 = new SqlCommand("DELETE FROM Used_app WHERE PC_ID=@PC_id AND Used_date=@Used_date", sqlconnection))
+            {
+                //sqldelete2.Parameters.Add(new SqlParameter("@App_id", SqlDbType.Int));
+                sqldelete2.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
+                sqldelete2.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
+                sqldelete2.Parameters["@PC_id"].Value = pcID.ToString();
+                sqldelete2.Parameters["@Used_date"].Value = DateTime.Now.ToShortDateString();
+                sqldelete2.ExecuteNonQuery();
+            }
+
+            using (SqlCommand sqlinsertusedapp = new SqlCommand("INSERT INTO Used_app (App_ID,PC_ID,Used_time,Used_date) VALUES (@App_id,@PC_id,@Used_time,@Used_date)", sqlconnection))
+                {
+                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@App_id", SqlDbType.VarChar));
+                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.VarChar));
+                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_time", SqlDbType.Float));
+                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
+                    for (int i = 0; i < UsedappList.Count; i++)
+                    {
+                        sqlinsertusedapp.Parameters["@App_id"].Value = UsedappList[i].App_ID;
+                        sqlinsertusedapp.Parameters["@PC_id"].Value = UsedappList[i].PC_ID;
+                        sqlinsertusedapp.Parameters["@Used_time"].Value = UsedappList[i].Used_time;
+                        sqlinsertusedapp.Parameters["@Used_date"].Value = UsedappList[i].Used_date;
+                        sqlinsertusedapp.ExecuteNonQuery();
+
+                    }
+                }
+
+            sqlconnection.Close();         
 
         }
 
