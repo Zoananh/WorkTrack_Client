@@ -12,7 +12,10 @@ namespace Work_Track_Client_v2
         public string Worked_Time;
         public string Worked_Date;
         public int rebootcount;
-
+        public Worked_time()
+        {
+            rebootcount = 0;
+        }
         public object Clone()
         {
             return new Worked_time { PC_ID = this.PC_ID, Worked_Time = this.Worked_Time, Worked_Date=this.Worked_Date, rebootcount = this.rebootcount };

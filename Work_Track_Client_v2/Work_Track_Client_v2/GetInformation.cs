@@ -25,7 +25,7 @@ namespace Work_Track_Client_v2
         Installedapp Apps;
         List<Installedapp> InstalledList = new List<Installedapp>();
         //List<Installedapp> InstalledList1;
-        public List<Used_app> CheckProcess(List<string> prlist, bool doit)
+        public List<Used_app> CheckProcess(List<string> prlist, bool doit, List<Used_app> UsedappBD, bool reboot)
         {            
             uselist.Clear();
             if (doit)
@@ -48,12 +48,13 @@ namespace Work_Track_Client_v2
             }
 
 
-            bool deleteIS = true;
+            
             for (int i = 0; i < ProcessList.Count; i++)
             {
+                bool deleteIS = true;
                 for (int j = 0; j < CurrentProcessList.Count; j++)
                 {
-                    if ((ProcessList[i].Contains(CurrentProcessList[j])))
+                    if (ProcessList[i]==CurrentProcessList[j])
                     {
                         deleteIS = false;
                     }
@@ -62,6 +63,7 @@ namespace Work_Track_Client_v2
                 if (deleteIS)
                 {
                     ProcessList.RemoveAt(i);
+                    i--;
                 }
             }
 
@@ -73,7 +75,7 @@ namespace Work_Track_Client_v2
                     bool addnew1 = true;
                     for (int i = 0; i < AllProcessList.Count; i++)
                     {
-                        if (str.Contains(AllProcessList[i][0]))
+                        if (str == AllProcessList[i][0])
                         {
                             double CurHour = Convert.ToDouble(AllProcessList[i][1]);
                             AllProcessList[i][1] = (CurHour + 0.5).ToString();
@@ -114,10 +116,67 @@ namespace Work_Track_Client_v2
                 uselist.Add(tempClone);
 
             }
+//=================================================================
+            //if (reboot)
+            //{
+            //    SqlConnection sqlstartapp = new SqlConnection(conn);
+            //    //Open the connection
+            //    sqlstartapp.Open();
 
+            //    using (var tempcmd2 = new SqlCommand("SELECT App_names FROM Applications WHERE App_ID=@App_id", sqlstartapp))
+            //    {
+            //        tempcmd2.Parameters.Add(new SqlParameter("@App_id", SqlDbType.Int));
+            //        foreach (Used_app uappp in UsedappBD)
+            //        {
+            //            tempcmd2.Parameters["@App_id"].Value = uappp.App_ID;
+            //            uappp.App_name = tempcmd2.ExecuteScalar().ToString();
+            //        }
+            //    }
 
+            //    sqlstartapp.Close();    
+            //    foreach (Used_app str2 in UsedappBD)
+            //    {
+            //        bool addnew1 = true;
+            //        for (int i = 0; i < uselist.Count; i++)
+            //        {
+            //            if (str2.App_name == uselist[i].App_name)
+            //            {
+            //                double hours = Convert.ToDouble(str2.Used_time);
+            //                uselist[i].Used_time = (hours + 0.5).ToString();
+            //                addnew1 = false;
+            //            }
+
+            //        }
+            //        if (addnew1)
+            //        {
+            //            Used_app TEMPstr = (Used_app)str2.Clone();
+            //            uselist.Add(TEMPstr);
+            //        }
+
+            //    }
+
+            //}
 
             ProcessList.Clear();
+
+            //if (reboot)
+            //{
+            //    foreach (Used_app uas in uselist)
+            //    {
+            //        string sstr = uas.App_name;
+            //        ProcessList.Add(sstr);
+
+            //    }
+
+            //}
+            //else
+            //{
+            //    foreach (string str in CurrentProcessList)
+            //    {
+            //        ProcessList.Add(str);
+
+            //    }
+            //}
             foreach (string str in CurrentProcessList)
             {
                 ProcessList.Add(str);
@@ -161,73 +220,8 @@ namespace Work_Track_Client_v2
             return noduplicatesList;
         }
 
-        public List<Used_app> Reboot_GetUsedApp(int pcID)
-        {
-            List<Used_app> UApp = new List<Used_app>();
-            Used_app _UApp = new Used_app();
-            SqlConnection sqlcon = new SqlConnection(conn);
-            //Open the connection
-            sqlcon.Open();
+       
 
-            using (SqlCommand sqlcmd = new SqlCommand("SELECT * FROM Used_app WHERE PC_ID=@PC_id AND Used_date=@Used_date", sqlcon))
-            {
-                sqlcmd.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
-                sqlcmd.Parameters["@PC_id"].Value = pcID;
-                sqlcmd.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
-                sqlcmd.Parameters["@Used_date"].Value = DateTime.Now.ToShortDateString();
-                object[] obj = new object[4];
-                using (var reader = sqlcmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        reader.GetValues(obj);
-                        _UApp.App_ID = obj[0].ToString();
-                        _UApp.PC_ID = obj[1].ToString();
-                        _UApp.Used_time = obj[2].ToString();
-                        _UApp.Used_date = obj[3].ToString();
-                        Used_app _Clone = (Used_app)_UApp.Clone();
-                        UApp.Add(_Clone);
-                    }
-                }
-            }
-
-            sqlcon.Close();
-            return UApp;
-
-        }
-
-        public List<Worked_time> Reboot_GetWorkedTime(int pcID)
-        {
-            List<Worked_time> WorkedTime = new List<Worked_time>();
-            Worked_time _WorkedTime = new Worked_time();
-            SqlConnection sqlcon2 = new SqlConnection(conn);
-            //Open the connection
-            sqlcon2.Open();
-
-            using (SqlCommand sqlcmd2 = new SqlCommand("SELECT * FROM Worked_time WHERE PC_ID=@PC_id AND Worked_Date=@Worked_date", sqlcon2))
-            {
-                sqlcmd2.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.Int));
-                sqlcmd2.Parameters["@PC_id"].Value = pcID;
-                sqlcmd2.Parameters.Add(new SqlParameter("@Worked_date", SqlDbType.Date));
-                sqlcmd2.Parameters["@Worked_date"].Value = DateTime.Now.ToShortDateString();
-                object[] obj = new object[4];
-                using (var reader = sqlcmd2.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        reader.GetValues(obj);
-                        _WorkedTime.PC_ID = obj[0].ToString();
-                        _WorkedTime.Worked_Time = obj[1].ToString();
-                        _WorkedTime.Worked_Date = obj[2].ToString();
-                        _WorkedTime.rebootcount =Convert.ToInt32(obj[3].ToString());
-                        Worked_time _Clone = (Worked_time)_WorkedTime.Clone();
-                        WorkedTime.Add(_Clone);
-                    }
-                }
-            }
-
-            sqlcon2.Close();
-            return WorkedTime;
-        }
+        
     }
 }

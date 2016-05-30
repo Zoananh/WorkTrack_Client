@@ -26,22 +26,27 @@ namespace Work_Track_Client_v2
     public partial class MainWindow : Window
     {
         string conn = ConfigurationManager.ConnectionStrings["Work_Track"].ConnectionString;
-        List<Used_app> UsedappList = new List<Used_app>();
-        List<Applications> AllAppsList = new List<Applications>();
-        List<Installedapp> InstalledAppsList = new List<Installedapp>();
+//------------------------------------------------------------------------------------        
         GetInformation getinf = new GetInformation();
-        GetFromDB getDB = new GetFromDB();
+        GetFromDB getDB = new GetFromDB();       
+        CheckingClass checkcl = new CheckingClass();
         BackgroundWorker bgw = new BackgroundWorker();
         BackgroundWorker bgw1 = new BackgroundWorker();
-        List<string> ProcessList = new List<string>();
-        System.Timers.Timer CheckprocTimer;
-        System.Timers.Timer mainwindowTimer;
+//------------------------------------------------------------------------------------
+        System.Timers.Timer CheckprocTimer, mainwindowTimer;
         DateTime t1, t2;
         Process[] pr;
         int pcID;
-        bool doit,insert;
+        bool doit, insert, reboot;
         string pcname;
-        CheckingClass checkcl = new CheckingClass();
+//------------------------------------------------------------------------------------
+        List<string> ProcessList = new List<string>();
+        List<Used_app> UsedappList = new List<Used_app>();
+        List<Applications> AllAppsList = new List<Applications>();
+        List<Installedapp> InstalledAppsList = new List<Installedapp>();       
+        //List<Worked_time> WorkedTimeBD = new List<Worked_time>();
+        List<Used_app> UsedappBD = new List<Used_app>();
+//------------------------------------------------------------------------------------
         public MainWindow()
         {
             InitializeComponent();
@@ -50,7 +55,7 @@ namespace Work_Track_Client_v2
             CheckprocTimer.Elapsed += CheckprocTimer_elapsed;
             CheckprocTimer.Interval = 30000;
             t1 = DateTime.Now;
-
+            reboot = false;
             //mainwindowTimer = new System.Timers.Timer();
             //mainwindowTimer.Elapsed += mainwindowTimer_elapsed;
             //mainwindowTimer.Interval = 1000;
@@ -131,9 +136,9 @@ namespace Work_Track_Client_v2
             // НАЧИНАТЬ ОТСЮДА !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (checkcl.CheckReboot(conn, pcID))
             {
-
-
-
+                //WorkedTimeBD = getDB.Reboot_GetWorkedTime(pcID);
+                UsedappBD = getDB.Reboot_GetUsedApp(pcID);
+                reboot = true;
             }
 
         // ТУТ ЗАКАНЧИВАЕТСФЯ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -198,7 +203,8 @@ namespace Work_Track_Client_v2
         public void worker_onCheckprocTimer_elapsed(object sender, DoWorkEventArgs e)
         {
             int userCount=0;
-            UsedappList = getinf.CheckProcess(ProcessList, doit);
+            UsedappList = getinf.CheckProcess(ProcessList, doit, UsedappBD, reboot);
+            reboot = false;
             doit = false;
             SqlConnection sqlconnection = new SqlConnection(conn);
             //Open the connection
@@ -226,7 +232,7 @@ namespace Work_Track_Client_v2
                     }
                 }
 
-                using (SqlCommand sqlsetidcommand2 = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names=@App_names", sqlconnection))
+                using (SqlCommand sqlsetidcommand2 = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names LIKE @App_names", sqlconnection))
                 {
                     sqlsetidcommand2.Parameters.Add(new SqlParameter("@App_names", SqlDbType.VarChar));
 
