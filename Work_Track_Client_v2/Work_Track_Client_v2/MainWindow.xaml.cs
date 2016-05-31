@@ -157,12 +157,13 @@ namespace Work_Track_Client_v2
                     {
                         sqlgetidcommand.Parameters["@App_nm"].Value = InstalledAppsList[newapps[i]].App_name;
                         sqlgetidcommand.Parameters["@App_pub"].Value = InstalledAppsList[newapps[i]].App_publisher;
+                        sqlgetidcommand.ExecuteNonQuery();
                     }
 
                 }
             }
 
-                using (SqlCommand sqlsetidcommand = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names=@App_names AND App_publisher=@App_pub", connection))
+                using (SqlCommand sqlsetidcommand = new SqlCommand("SELECT App_ID FROM Applications WHERE App_names LIKE @App_names AND App_publisher=@App_pub", connection))
                 {
                     sqlsetidcommand.Parameters.Add(new SqlParameter("@App_names", SqlDbType.VarChar));
                 sqlsetidcommand.Parameters.Add(new SqlParameter("@App_pub", SqlDbType.VarChar));

@@ -181,7 +181,21 @@ namespace Work_Track_Client_v2
                 ProcessList.Add(str);
 
             }
+            //--------------------------------------------------
+            for (int i = 0; i < uselist.Count; i++)
+            {
+                if (uselist[i].App_name.EndsWith("Google Chrome"))
+                {
+                    uselist[i].App_name = "Google Chrome";
+                }
+                if (uselist[i].App_name.EndsWith("Mozila Firefox"))
+                {
+                    uselist[i].App_name = "Mozilla Firefox";
+                }
+            }
 
+
+            //---------------------------------------------------
             return uselist;
 
         }
