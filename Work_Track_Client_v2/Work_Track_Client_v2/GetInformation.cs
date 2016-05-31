@@ -28,6 +28,7 @@ namespace Work_Track_Client_v2
         public List<Used_app> CheckProcess(List<string> prlist, bool doit, List<Used_app> UsedappBD, bool reboot)
         {            
             uselist.Clear();
+            CurrentProcessList.Clear();
             if (doit)
             {
                 ProcessList = prlist;
@@ -116,73 +117,71 @@ namespace Work_Track_Client_v2
                 uselist.Add(tempClone);
 
             }
-//=================================================================
-            //if (reboot)
-            //{
-            //    SqlConnection sqlstartapp = new SqlConnection(conn);
-            //    //Open the connection
-            //    sqlstartapp.Open();
+            //=================================================================
+            if (reboot)
+            {
+                SqlConnection sqlstartapp = new SqlConnection(conn);
+                //Open the connection
+                sqlstartapp.Open();
 
-            //    using (var tempcmd2 = new SqlCommand("SELECT App_names FROM Applications WHERE App_ID=@App_id", sqlstartapp))
-            //    {
-            //        tempcmd2.Parameters.Add(new SqlParameter("@App_id", SqlDbType.Int));
-            //        foreach (Used_app uappp in UsedappBD)
-            //        {
-            //            tempcmd2.Parameters["@App_id"].Value = uappp.App_ID;
-            //            uappp.App_name = tempcmd2.ExecuteScalar().ToString();
-            //        }
-            //    }
+                using (var tempcmd2 = new SqlCommand("SELECT App_names FROM Applications WHERE App_ID=@App_id", sqlstartapp))
+                {
+                    tempcmd2.Parameters.Add(new SqlParameter("@App_id", SqlDbType.Int));
+                    foreach (Used_app uappp in UsedappBD)
+                    {
+                        tempcmd2.Parameters["@App_id"].Value = uappp.App_ID;
+                        uappp.App_name = tempcmd2.ExecuteScalar().ToString();
+                    }
+                }
 
-            //    sqlstartapp.Close();    
-            //    foreach (Used_app str2 in UsedappBD)
-            //    {
-            //        bool addnew1 = true;
-            //        for (int i = 0; i < uselist.Count; i++)
-            //        {
-            //            if (str2.App_name == uselist[i].App_name)
-            //            {
-            //                double hours = Convert.ToDouble(str2.Used_time);
-            //                uselist[i].Used_time = (hours + 0.5).ToString();
-            //                addnew1 = false;
-            //            }
+                sqlstartapp.Close();
+                int a = uselist.Count;
+                int s = 0;
+                foreach (Used_app uaps in UsedappBD)                    
+                {
+                    Used_app usedtime = new Used_app();
+                    bool add = true;
+                    for (s = 0; s < a; s++)
+                    {
+                        if (uaps.App_name == uselist[s].App_name)
+                        {
+                            add = false;                            
+                            uselist[s].Used_time = (0.5 + Convert.ToDouble(uaps.Used_time)).ToString();
+                            break;
+                        }
+                    }
+                    if (add)
+                    {
+                        usedtime = (Used_app)uaps.Clone();
+                        uselist.Add(usedtime);
+                    }
+                }
 
-            //        }
-            //        if (addnew1)
-            //        {
-            //            Used_app TEMPstr = (Used_app)str2.Clone();
-            //            uselist.Add(TEMPstr);
-            //        }
-
-            //    }
-
-            //}
+            }
 
             ProcessList.Clear();
 
-            //if (reboot)
-            //{
-            //    foreach (Used_app uas in uselist)
-            //    {
-            //        string sstr = uas.App_name;
-            //        ProcessList.Add(sstr);
+            if (reboot)
+            {
+                AllProcessList.Clear();
+                foreach (Used_app uas in uselist)
+                {
+                    string sstr = uas.App_name;
+                    ProcessList.Add(sstr);
+                    string[] straray = new string[2];
+                    straray[0] = uas.App_name;
+                    straray[1] = uas.Used_time;
+                    AllProcessList.Add(straray);
+                }
 
-            //    }
+            }
 
-            //}
-            //else
-            //{
-            //    foreach (string str in CurrentProcessList)
-            //    {
-            //        ProcessList.Add(str);
-
-            //    }
-            //}
             foreach (string str in CurrentProcessList)
             {
                 ProcessList.Add(str);
 
             }
-            CurrentProcessList.Clear();
+
             return uselist;
 
         }

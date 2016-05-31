@@ -53,7 +53,7 @@ namespace Work_Track_Client_v2
 
             CheckprocTimer = new System.Timers.Timer();
             CheckprocTimer.Elapsed += CheckprocTimer_elapsed;
-            CheckprocTimer.Interval = 30000;
+            CheckprocTimer.Interval = 15000;
             t1 = DateTime.Now;
             reboot = false;
             //mainwindowTimer = new System.Timers.Timer();
@@ -238,7 +238,7 @@ namespace Work_Track_Client_v2
 
                     for (int i = 0; i < UsedappList.Count; i++)
                     {
-                        sqlsetidcommand2.Parameters["@App_names"].Value = UsedappList[i].App_name;
+                        sqlsetidcommand2.Parameters["@App_names"].Value = "%"+UsedappList[i].App_name;
                         UsedappList[i].App_ID = sqlsetidcommand2.ExecuteScalar().ToString();
                         UsedappList[i].PC_ID = pcID.ToString();
                     }
@@ -255,23 +255,50 @@ namespace Work_Track_Client_v2
                 sqldelete2.ExecuteNonQuery();
             }
 
+            //Used_app usedtime = new Used_app();
+            //if (reboot)
+            //{
+            //    for (int i = 0; i < UsedappList.Count; i++)                   
+            //    {
+            //        bool add = true;
+            //        foreach (Used_app uaps in UsedappBD)
+            //        {
+            //            if (uaps.App_name == UsedappList[i].App_name)
+            //            {
+            //                add = false;
+            //                usedtime = (Used_app)uaps.Clone();
+            //                break;
+            //            }                     
+            //        }
+            //        if (add)
+            //        {
+            //            UsedappList[i].Used_time = (Convert.ToDouble(usedtime.Used_time) + Convert.ToDouble(UsedappList[i].Used_time)).ToString();
+            //            }
+            //        else
+            //        {
+            //            UsedappList.Add(usedtime);
+            //        }
+            //    }
+            //    reboot = false;
+                
+
+            //}
             using (SqlCommand sqlinsertusedapp = new SqlCommand("INSERT INTO Used_app (App_ID,PC_ID,Used_time,Used_date) VALUES (@App_id,@PC_id,@Used_time,@Used_date)", sqlconnection))
+            {
+                sqlinsertusedapp.Parameters.Add(new SqlParameter("@App_id", SqlDbType.VarChar));
+                sqlinsertusedapp.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.VarChar));
+                sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_time", SqlDbType.Float));
+                sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
+                for (int i = 0; i < UsedappList.Count; i++)
                 {
-                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@App_id", SqlDbType.VarChar));
-                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@PC_id", SqlDbType.VarChar));
-                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_time", SqlDbType.Float));
-                    sqlinsertusedapp.Parameters.Add(new SqlParameter("@Used_date", SqlDbType.Date));
-                    for (int i = 0; i < UsedappList.Count; i++)
-                    {
-                        sqlinsertusedapp.Parameters["@App_id"].Value = UsedappList[i].App_ID;
-                        sqlinsertusedapp.Parameters["@PC_id"].Value = UsedappList[i].PC_ID;
-                        sqlinsertusedapp.Parameters["@Used_time"].Value = UsedappList[i].Used_time;
-                        sqlinsertusedapp.Parameters["@Used_date"].Value = UsedappList[i].Used_date;
-                        sqlinsertusedapp.ExecuteNonQuery();
+                    sqlinsertusedapp.Parameters["@App_id"].Value = UsedappList[i].App_ID;
+                    sqlinsertusedapp.Parameters["@PC_id"].Value = UsedappList[i].PC_ID;
+                    sqlinsertusedapp.Parameters["@Used_time"].Value = UsedappList[i].Used_time;
+                    sqlinsertusedapp.Parameters["@Used_date"].Value = UsedappList[i].Used_date;
+                    sqlinsertusedapp.ExecuteNonQuery();
 
-                    }
                 }
-
+            }
             sqlconnection.Close();         
 
         }
