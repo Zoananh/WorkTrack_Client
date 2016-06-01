@@ -129,7 +129,21 @@ namespace Work_Track_Client_v2
                 }
 
             }
-
+            for (int i = 0; i < ProcessList.Count; i++)
+            {
+                if (ProcessList[i].EndsWith("Google Chrome"))
+                {
+                    ProcessList[i] = "Google Chrome";
+                }
+                if (ProcessList[i].EndsWith("Mozila Firefox"))
+                {
+                    ProcessList[i] = "Mozilla Firefox";
+                }
+                if (ProcessList[i].StartsWith("Skype"))
+                {
+                    ProcessList[i] = "Skype";
+                }
+            }
             pcID = getDB.getPcID();
             AllAppsList = getDB.getAllApplicationslist();
             checkcl.CheckFirstDate(conn,pcID);
@@ -170,7 +184,7 @@ namespace Work_Track_Client_v2
 
                 for (int i = 0; i < InstalledAppsList.Count; i++)
                     {
-                        sqlsetidcommand.Parameters["@App_names"].Value = InstalledAppsList[i].App_name;
+                        sqlsetidcommand.Parameters["@App_names"].Value ="%"+InstalledAppsList[i].App_name+"%";
                     sqlsetidcommand.Parameters["@App_pub"].Value = InstalledAppsList[i].App_publisher;
                     InstalledAppsList[i].App_ID = sqlsetidcommand.ExecuteScalar().ToString();
                         InstalledAppsList[i].PC_ID = pcID.ToString();
@@ -204,6 +218,7 @@ namespace Work_Track_Client_v2
         public void worker_onCheckprocTimer_elapsed(object sender, DoWorkEventArgs e)
         {
             int userCount=0;
+            UsedappList.Clear();
             UsedappList = getinf.CheckProcess(ProcessList, doit, UsedappBD, reboot);
             reboot = false;
             doit = false;

@@ -48,8 +48,22 @@ namespace Work_Track_Client_v2
 
             }
 
+            for (int i = 0; i < CurrentProcessList.Count; i++)
+            {
+                if (CurrentProcessList[i].EndsWith("Google Chrome"))
+                {
+                    CurrentProcessList[i] = "Google Chrome";
+                }
+                if (CurrentProcessList[i].EndsWith("Mozila Firefox"))
+                {
+                    CurrentProcessList[i] = "Mozilla Firefox";
+                }
+                if (CurrentProcessList[i].StartsWith("Skype"))
+                {
+                    CurrentProcessList[i] = "Skype";
+                }
+            }
 
-            
             for (int i = 0; i < ProcessList.Count; i++)
             {
                 bool deleteIS = true;
@@ -117,6 +131,7 @@ namespace Work_Track_Client_v2
                 uselist.Add(tempClone);
 
             }
+            
             //=================================================================
             if (reboot)
             {
@@ -182,17 +197,7 @@ namespace Work_Track_Client_v2
 
             }
             //--------------------------------------------------
-            for (int i = 0; i < uselist.Count; i++)
-            {
-                if (uselist[i].App_name.EndsWith("Google Chrome"))
-                {
-                    uselist[i].App_name = "Google Chrome";
-                }
-                if (uselist[i].App_name.EndsWith("Mozila Firefox"))
-                {
-                    uselist[i].App_name = "Mozilla Firefox";
-                }
-            }
+           
 
 
             //---------------------------------------------------
@@ -226,6 +231,23 @@ namespace Work_Track_Client_v2
                     }
                 }
             }
+
+            for (int i = 0; i < InstalledList.Count; i++)
+            {
+                if (InstalledList[i].App_name.EndsWith("Google Chrome"))
+                {
+                    InstalledList[i].App_name = "Google Chrome";
+                }
+                if (InstalledList[i].App_name.EndsWith("Mozila Firefox"))
+                {
+                    InstalledList[i].App_name = "Mozilla Firefox";
+                }
+                if (InstalledList[i].App_name.StartsWith("Skype"))
+                {
+                    InstalledList[i].App_name = "Skype";
+                }
+            }
+
 
             List<Installedapp> noduplicatesList = InstalledList.Distinct(new InstalledappComparer()).ToList<Installedapp>();
 
